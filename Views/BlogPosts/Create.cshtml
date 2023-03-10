@@ -1,0 +1,188 @@
+﻿@model AstraBlog.Models.BlogPost
+@using AstraBlog.Enums;
+@using AstraBlog.Services.Interfaces
+
+@inject IImageService _ImageService
+@inject IAstraBlogService _BlogPostService
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .ck-editor__editable_inline {
+        min-height: 600px;
+    }
+
+    input.largerCheckbox {
+        width: 30px;
+        height: 30px;
+    }
+
+    label.form-check-label {
+        font-size: 22px;
+    }
+</style>
+
+
+
+<div class="post-single-wrapper axil-section-gap bg-color-white">
+    <div class="container">
+        <h1>Create</h1>
+
+        <h4>BlogPost</h4>
+    </div>
+    <hr />
+    <main class="container mt-5">
+
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="ImageFile" class="control-label">Blog Post Image</label>
+                        <img class="img-fluid border rounded-3 mb-2" style="max-height: 350px;" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPostImage)" id="blogImage">
+                        <input asp-for="ImageFile" type="file" class="form-control mt-3 pt-2" accept=".png,.jpg,.jpeg,.gif"
+                               onchange="document.getElementById('blogImage').src = window.URL.createObjectURL(this.files[0])" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Abstract" class="control-label"></label>
+                        <textarea asp-for="Abstract" class="form-control" rows="1"></textarea>
+                        <span asp-validation-for="Abstract" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CategoryId" class="control-label">Category</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8">
+                    <div class="form-group">
+                        <label asp-for="Content" class="control-label"></label>
+                        <textarea asp-for="Content" class="editor form-control"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" id="tagContainer">
+                        <label asp-for="Tags"></label>
+                        <input class="form-control" type="text" id="tagInput" name="StringTags" autocomplete="off" />
+                        <div class="tagcloud axil-single-widget mt-2" style="display:none">
+                            @foreach (Tag tag in await _BlogPostService.GetTagsAsync())
+                            {
+                                <a onclick="addTag(this)">@tag.Name</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+                <label class="form-check-label me-4 mt-2" asp-for="IsPublished">Publish?</label>
+                <input class="largerCheckbox me-8" type="checkbox" asp-for="IsPublished" />
+                <span asp-validation-for="IsPublished" class="text-danger"></span>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="form-group mt-5 start-0">
+            <a asp-action="AdminPage">< Admin Page</a>
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/ckeditor5/build/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('.editor'), {
+                licenseKey: '',
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error('Oops, something went wrong!');
+                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                console.warn('Build id: xx09iayzufkn-lkt434h3lx2z');
+                console.error(error);
+            });
+    </script>
+
+
+    <script>
+        function addTag(el) {
+            let input = document.getElementById('tagInput');
+            let tagName = '';
+
+            //if (input.value != '') {
+            //    tagName = ',' + el.textContent;
+            //} else {
+            //    tagName = el.textContent;
+            //}
+            tagName = el.textContent + ',';
+
+            let currentTags = input.value.split(',');
+
+            currentTags.pop();
+            currentTags.push(tagName);
+
+            input.value = currentTags.reduce((inputString, currentString) => inputString + ',' + currentString.trim());
+
+            el.classList.add('disabledTag');
+            input.focus();
+        }
+
+        // override the jQuery ":contains" selector to make it case insensitive
+        jQuery.expr[':'].contains = function (a, i, m) {
+            return $(a).text().toUpperCase()
+                .indexOf(m[3].toUpperCase()) >= 0;
+        };
+
+        $(document).ready(function () {
+            $('#tagInput').focus(function () {
+                // show tag cloud when the input is focused
+                $('.tagcloud').show(300);
+            });
+
+            $('form *:not("#tagInput")').focus(function () {
+                if ($('.tagcloud').is(':visible')) {
+                    $('.tagcloud').hide(300);
+                }
+            });
+
+            $('#tagInput').keyup(function () {
+                $('.disabledTag').each(function () {
+                    $(this).removeClass('disabledTag');
+                });
+
+                let inputTags = $(this).val().split(',');
+
+                let searchString = inputTags.pop().trim();
+
+                $('.tagcloud > a:not( :contains(' + searchString + '))').hide();
+                $('.tagcloud > a:contains(' + searchString + '))').show();
+
+                inputTags.foreach(addTag => {
+                    if (tag.trim() == '') {
+                        return;
+                    }
+
+                    let containingTag = $('.tagcloud > a:contains(' + tag.trim() + ')');
+
+                    if (containingTag.text().trim().toLowerCase() == tag.trim().toLowerCase()) {
+                        containingTag.addClass('disabledTag');
+                    }
+                });
+
+            });
+        });
+    </script>
+}

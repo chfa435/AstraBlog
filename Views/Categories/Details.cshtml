@@ -1,0 +1,97 @@
+﻿@model AstraBlog.Models.Category
+
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using AstraBlog.Services.Interfaces
+@using AstraBlog.Enums
+@using X.PagedList.Web.Common;
+
+@inject IImageService _ImageService
+@inject IAstraBlogService _BlogService
+
+@{
+    ViewData["Title"] = "Details";
+    int pageSize = 3;
+    int page = ViewBag.PageNum ?? 1;
+
+    IPagedList<BlogPost> categoryBlogPosts = Model.BlogPosts
+                                                  .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                  .ToPagedList(page, pageSize);
+}
+
+<!-- Start Category Area  -->
+<div class="axil-author-area axil-author-banner bg-color-grey">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="about-author">
+                    <div class="media">
+                        <div class="thumbnail">
+                            <a href="#">
+                                <img style="height:240px;width:240px" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!, (int)DefaultImage.CategoryImage)" alt="Author Images">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <div class="author-info">
+                                <h1 class="title"><a href="#">@Model.Name</a></h1>
+                                <span class="b3 subtitle"></span>
+                            </div>
+                            <div class="content">
+                                <p class="b1 description">
+                                    @Model.Description
+                                </p>                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Category Area  -->
+
+<!-- Start Post List Wrapper  -->
+<div class="axil-post-list-area axil-section-gap bg-color-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h2 class="title mb--40">Articles By This Author</h2>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xl-8">
+
+                @foreach (var blogPost in categoryBlogPosts)
+                {
+                    <partial name="_BlogCard" model="@blogPost" />
+                }
+
+                <div>
+                    <div>
+                        Page @(categoryBlogPosts.PageCount < categoryBlogPosts.PageNumber ? 0 : categoryBlogPosts.PageNumber) of @categoryBlogPosts.PageCount
+                    </div>
+
+                    @Html.PagedListPager(categoryBlogPosts, pageNum => Url.Action("Details", new { id = Model.Id, pageNum = pageNum }),
+                    new PagedListRenderOptions
+                    {
+                        LiElementClasses = new string[] {"my-page-item"},
+                        PageClasses = new string[] {"my-page-link"}
+                    })
+
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+
+                <partial name="_Sidebar" />
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Post List Wrapper  -->
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

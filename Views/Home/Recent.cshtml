@@ -1,0 +1,55 @@
+﻿@model IPagedList<AstraBlog.Models.BlogPost>
+
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using AstraBlog.Services.Interfaces
+@using AstraBlog.Enums
+@using X.PagedList.Web.Common;
+
+@inject IImageService _ImageService
+@inject IAstraBlogService _BlogService
+
+
+<partial name="_AuthorArea" />
+
+<!-- Start Post List Wrapper  -->
+<div class="axil-post-list-area axil-section-gap bg-color-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h2 class="title mb--40">Articles By This Author</h2>
+                </div>
+            </div>
+            <div class="offset-md-2 col-md-8 col-lg-8">
+
+                @foreach (var blogPost in Model)
+                {
+                    <partial name="_BlogCard" model="@blogPost" />
+                }
+
+                <div>
+                    <div>
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    </div>
+
+                    @Html.PagedListPager(Model, pageNum => Url.Action("Index", new { pageNum }),
+                    new PagedListRenderOptions
+                    {
+                        LiElementClasses = new string[] {"my-page-item"},
+                        PageClasses = new string[] {"my-page-link"}
+                    })
+
+                </div>
+
+            </div>
+@*            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+
+                <partial name="_Sidebar" />
+
+            </div>*@
+        </div>
+    </div>
+</div>
+<!-- End Post List Wrapper  -->
+<!-- Start Instagram Area  -->
