@@ -91,8 +91,8 @@ namespace AstraBlog.Data
                 {
                     Email = _adminEmail,
                     UserName = _adminEmail,
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = "Admin",
+                    LastName = "User",
                     EmailConfirmed = true
                 };
 
