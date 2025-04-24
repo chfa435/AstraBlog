@@ -39,6 +39,13 @@
         box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
     }
 
+    /* Remove any file input specific styles from form-control */
+    .form-control[type="file"] {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+
     .btn-primary {
         background-color: #3498db;
         border: none;
@@ -109,7 +116,7 @@
                             <img src="/img/DefaultCategoryImage.png" 
                                  id="categoryImage" alt="Category preview">
                         </div>
-                        <input asp-for="ImageFile" type="file" class="form-control mt-3" 
+                        <input asp-for="ImageFile" type="file" class="file-input mt-3" 
                                accept=".png,.jpg,.jpeg,.gif"
                                onchange="previewImage(this)" />
                         <span asp-validation-for="ImageFile" class="text-danger"></span>
