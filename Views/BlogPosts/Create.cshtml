@@ -1,6 +1,7 @@
 ﻿@model AstraBlog.Models.BlogPost
 @using AstraBlog.Enums;
 @using AstraBlog.Services.Interfaces
+@using AstraBlog.Models.Enums
 
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogPostService
@@ -79,9 +80,14 @@
                 </div>
             </div>
             <div class="form-group d-flex justify-content-end">
-                <label class="form-check-label me-4 mt-2" asp-for="IsPublished">Publish?</label>
-                <input class="largerCheckbox me-8" type="checkbox" asp-for="IsPublished" />
-                <span asp-validation-for="IsPublished" class="text-danger"></span>
+                <label class="form-check-label me-4 mt-2" asp-for="Status">Status</label>
+                <select asp-for="Status" class="form-select" style="width: 200px;">
+                    <option value="@PublishStatus.Draft">Draft</option>
+                    <option value="@PublishStatus.ReadyForReview">Ready for Review</option>
+                    <option value="@PublishStatus.Published">Published</option>
+                    <option value="@PublishStatus.Archived">Archived</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group d-flex justify-content-end">
                 <input type="submit" value="Create" class="btn btn-primary" />

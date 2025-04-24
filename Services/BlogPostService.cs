@@ -1,8 +1,10 @@
 ﻿using AstraBlog.Data;
 using AstraBlog.Helpers;
 using AstraBlog.Models;
+using AstraBlog.Models.Enums;
 using AstraBlog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace AstraBlog.Services
 {
@@ -240,7 +242,7 @@ namespace AstraBlog.Services
             try
             {
                 IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
-                                                                .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                                 .Include(b => b.Category)
                                                                 .Include(b => b.Tags)
                                                                 .Include(b => b.Comments)
@@ -268,7 +270,7 @@ namespace AstraBlog.Services
             try
             {
                 IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
-                                                                .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                                 .Include(b => b.Category)
                                                                 .Include(b => b.Tags)
                                                                 .Include(b => b.Comments)
@@ -290,7 +292,7 @@ namespace AstraBlog.Services
             try
             {
                 IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
-                                                                .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                                 .Include(b => b.Category)
                                                                 .Include(b => b.Tags)
                                                                 .Include(b => b.Comments)
@@ -312,7 +314,7 @@ namespace AstraBlog.Services
             try
             {
                 IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
-                                                                .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                                 .Include(b => b.Category)
                                                                 .Include(b => b.Tags)
                                                                 .Include(b => b.Comments)
@@ -334,7 +336,7 @@ namespace AstraBlog.Services
             try
             {
                 IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
-                                                                .Where(b => b.IsPublished == true && b.IsDeleted == false && b.Id != blogPostId)
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false && b.Id != blogPostId)
                                                                 .Include(b => b.Category)
                                                                 .Include(b => b.Tags)
                                                                 .Include(b => b.Comments)
@@ -419,7 +421,7 @@ namespace AstraBlog.Services
                                                         .ThenInclude(c => c.Author)
                                                    .Include(b => b.Category)
                                                    .Include(b => b.Tags)
-                                                   .Where(b => b.IsDeleted == false && b.IsPublished == true)
+                                                   .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                    .AsNoTracking()
                                                    .OrderByDescending(b => b.Created)
                                                    .AsEnumerable();

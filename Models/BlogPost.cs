@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using AstraBlog.Models.Enums;
 
 namespace AstraBlog.Models
 {
@@ -31,8 +32,8 @@ namespace AstraBlog.Models
         [Display(Name = "Deleted?")]
         public bool IsDeleted { get; set; }
 
-        [Display(Name = "Published?")]
-        public bool IsPublished { get; set; }
+        [Display(Name = "Status")]
+        public PublishStatus Status { get; set; }
 
         // Image Properties
         public byte[]? ImageData { get; set; }

@@ -1,10 +1,11 @@
 ﻿@model AstraBlog.Models.Category
+@using AstraBlog.Models.Enums
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
 
-@using X.PagedList;
-@using X.PagedList.Mvc.Core;
 @using AstraBlog.Services.Interfaces
 @using AstraBlog.Enums
-@using X.PagedList.Web.Common;
 
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogService
@@ -12,10 +13,10 @@
 @{
     ViewData["Title"] = "Details";
     int pageSize = 3;
-    int page = ViewBag.PageNum ?? 1;
+    int page = ViewBag.Page ?? 1;
 
     IPagedList<BlogPost> categoryBlogPosts = Model.BlogPosts
-                                                  .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                  .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
                                                   .ToPagedList(page, pageSize);
 }
 
