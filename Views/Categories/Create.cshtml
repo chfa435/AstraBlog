@@ -1,46 +1,132 @@
 ﻿@model AstraBlog.Models.Category
+@using AstraBlog.Services.Interfaces
+@using AstraBlog.Enums
+
+@inject IImageService _ImageService
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create New Category";
 }
 
-<h1>Create</h1>
+<style>
+    .form-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    .image-preview {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        max-width: 300px;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .back-link {
+        color: #3498db;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .back-link:hover {
+        color: #2980b9;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <h1 class="mb-4">Create New Category</h1>
+                
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Name" class="form-label">Category Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" 
+                                  placeholder="Enter category description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ImageFile" class="form-label">Category Image</label>
+                        <div class="image-preview">
+                            <img src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!, (int)DefaultImage.CategoryImage)" 
+                                 id="categoryImage" alt="Category preview">
+                        </div>
+                        <input asp-for="ImageFile" type="file" class="form-control mt-3" 
+                               accept=".png,.jpg,.jpeg,.gif"
+                               onchange="document.getElementById('categoryImage').src = window.URL.createObjectURL(this.files[0])" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between align-items-center mt-4">
+                        <a asp-action="Index" class="back-link">
+                            <i class="fas fa-arrow-left"></i> Back to Categories
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Category
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageData" class="control-label"></label>
-                <input asp-for="ImageData" class="form-control" />
-                <span asp-validation-for="ImageData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageType" class="control-label"></label>
-                <input asp-for="ImageType" class="form-control" />
-                <span asp-validation-for="ImageType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
