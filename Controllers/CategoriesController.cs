@@ -70,11 +70,41 @@ namespace AstraBlog.Controllers
             {
                 try
                 {
-                    // Image Service
-                    if (category.ImageFile != null && category.ImageFile.Length > 0)
+                    // Validate required fields
+                    if (string.IsNullOrWhiteSpace(category.Name))
                     {
-                        category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
-                        category.ImageType = category.ImageFile.ContentType;
+                        ModelState.AddModelError("Name", "Category name is required");
+                        return View(category);
+                    }
+
+                    // Image Service
+                    if (category.ImageFile != null)
+                    {
+                        // Validate file type
+                        var validTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+                        if (!validTypes.Contains(category.ImageFile.ContentType))
+                        {
+                            ModelState.AddModelError("ImageFile", "Please upload a valid image file (JPEG, PNG, or GIF)");
+                            return View(category);
+                        }
+
+                        // Validate file size (max 5MB)
+                        if (category.ImageFile.Length > 5 * 1024 * 1024)
+                        {
+                            ModelState.AddModelError("ImageFile", "File size must be less than 5MB");
+                            return View(category);
+                        }
+
+                        try
+                        {
+                            category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
+                            category.ImageType = category.ImageFile.ContentType;
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("ImageFile", "Error processing image: " + ex.Message);
+                            return View(category);
+                        }
                     }
 
                     await _blogPostService.AddCategoryAsync(category);   
@@ -82,7 +112,7 @@ namespace AstraBlog.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "An error occurred while creating the category. Please try again.");
+                    ModelState.AddModelError("", "An error occurred while creating the category: " + ex.Message);
                     return View(category);
                 }
             }

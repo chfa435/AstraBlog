@@ -24,28 +24,42 @@ namespace AstraBlog.Services
 
             try
             {
-                string imageBase64Data = Convert.ToBase64String(fileData);
-                imageBase64Data = string.Format($"data:{extension};base64,{imageBase64Data}");
+                if (string.IsNullOrWhiteSpace(extension))
+                {
+                    extension = "image/jpeg"; // Default extension
+                }
 
-                return imageBase64Data;
+                string imageBase64Data = Convert.ToBase64String(fileData);
+                return $"data:{extension};base64,{imageBase64Data}";
             }
             catch (Exception ex)
             {
-                throw new Exception("Error converting byte array to file", ex);
+                throw new Exception($"Error converting byte array to file: {ex.Message}", ex);
             }
         }
 
         public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
         {
-            if (file == null || file.Length == 0)
+            if (file == null)
             {
-                throw new ArgumentException("File is null or empty", nameof(file));
+                throw new ArgumentNullException(nameof(file), "File cannot be null");
+            }
+
+            if (file.Length == 0)
+            {
+                throw new ArgumentException("File is empty", nameof(file));
             }
 
             try
             {
                 using MemoryStream memoryStream = new MemoryStream();
                 await file.CopyToAsync(memoryStream);
+                
+                if (memoryStream.Length == 0)
+                {
+                    throw new Exception("Failed to read file content");
+                }
+
                 byte[] byteFile = memoryStream.ToArray();
                 memoryStream.Close();
 
@@ -53,7 +67,7 @@ namespace AstraBlog.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Error converting file to byte array", ex);
+                throw new Exception($"Error converting file to byte array: {ex.Message}", ex);
             }
         }
     }
