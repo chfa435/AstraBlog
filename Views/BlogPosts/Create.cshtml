@@ -7,7 +7,7 @@
 @inject IAstraBlogService _BlogPostService
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create New Blog Post";
 }
 
 <style>
@@ -15,180 +15,177 @@
         min-height: 600px;
     }
 
-    input.largerCheckbox {
-        width: 30px;
-        height: 30px;
+    .form-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
     }
 
-    label.form-check-label {
-        font-size: 22px;
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    .image-preview {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .tag {
+        background: #f1f1f1;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+        background: #e0e0e0;
+    }
+
+    .status-select {
+        width: 200px;
+        border-radius: 8px;
+        padding: 0.5rem;
     }
 </style>
 
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="form-card">
+                <h1 class="mb-4">Create New Blog Post</h1>
+                
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                    
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label asp-for="ImageFile" class="form-label">Featured Image</label>
+                                <div class="image-preview">
+                                    <img class="img-fluid" style="max-height: 350px;" 
+                                         src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPostImage)" 
+                                         id="blogImage">
+                                </div>
+                                <input asp-for="ImageFile" type="file" class="form-control mt-3" 
+                                       accept=".png,.jpg,.jpeg,.gif"
+                                       onchange="document.getElementById('blogImage').src = window.URL.createObjectURL(this.files[0])" />
+                            </div>
 
+                            <div class="form-group">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter post title" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
 
-<div class="post-single-wrapper axil-section-gap bg-color-white">
-    <div class="container">
-        <h1>Create</h1>
+                            <div class="form-group">
+                                <label asp-for="Abstract" class="form-label"></label>
+                                <textarea asp-for="Abstract" class="form-control" rows="3" 
+                                          placeholder="Write a brief summary of your post"></textarea>
+                                <span asp-validation-for="Abstract" class="text-danger"></span>
+                            </div>
 
-        <h4>BlogPost</h4>
-    </div>
-    <hr />
-    <main class="container mt-5">
+                            <div class="form-group">
+                                <label asp-for="CategoryId" class="form-label">Category</label>
+                                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                                    <option value="">Select a category</option>
+                                </select>
+                            </div>
+                        </div>
 
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col-12 col-lg-4">
-                    <div class="form-group">
-                        <label asp-for="ImageFile" class="control-label">Blog Post Image</label>
-                        <img class="img-fluid border rounded-3 mb-2" style="max-height: 350px;" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPostImage)" id="blogImage">
-                        <input asp-for="ImageFile" type="file" class="form-control mt-3 pt-2" accept=".png,.jpg,.jpeg,.gif"
-                               onchange="document.getElementById('blogImage').src = window.URL.createObjectURL(this.files[0])" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Title" class="control-label"></label>
-                        <input asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Abstract" class="control-label"></label>
-                        <textarea asp-for="Abstract" class="form-control" rows="1"></textarea>
-                        <span asp-validation-for="Abstract" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="CategoryId" class="control-label">Category</label>
-                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-8">
-                    <div class="form-group">
-                        <label asp-for="Content" class="control-label"></label>
-                        <textarea asp-for="Content" class="editor form-control"></textarea>
-                        <span asp-validation-for="Content" class="text-danger"></span>
-                    </div>
-                    <div class="form-group" id="tagContainer">
-                        <label asp-for="Tags"></label>
-                        <input class="form-control" type="text" id="tagInput" name="StringTags" autocomplete="off" />
-                        <div class="tagcloud axil-single-widget mt-2" style="display:none">
-                            @foreach (Tag tag in await _BlogPostService.GetTagsAsync())
-                            {
-                                <a onclick="addTag(this)">@tag.Name</a>
-                            }
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label asp-for="Content" class="form-label"></label>
+                                <textarea asp-for="Content" class="editor form-control"></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Tags</label>
+                                <input class="form-control" type="text" id="tagInput" name="StringTags" 
+                                       placeholder="Add tags (comma separated)" autocomplete="off" />
+                                <div class="tagcloud axil-single-widget mt-2" style="display:none">
+                                    @foreach (Tag tag in await _BlogPostService.GetTagsAsync())
+                                    {
+                                        <a onclick="addTag(this)" class="tag">@tag.Name</a>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-group d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <label class="form-label me-3" asp-for="Status">Post Status</label>
+                            <select asp-for="Status" class="status-select">
+                                <option value="@PublishStatus.Draft">Draft</option>
+                                <option value="@PublishStatus.ReadyForReview">Ready for Review</option>
+                                <option value="@PublishStatus.Published">Published</option>
+                                <option value="@PublishStatus.Archived">Archived</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Post</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group d-flex justify-content-end">
-                <label class="form-check-label me-4 mt-2" asp-for="Status">Status</label>
-                <select asp-for="Status" class="form-select" style="width: 200px;">
-                    <option value="@PublishStatus.Draft">Draft</option>
-                    <option value="@PublishStatus.ReadyForReview">Ready for Review</option>
-                    <option value="@PublishStatus.Published">Published</option>
-                    <option value="@PublishStatus.Archived">Archived</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group d-flex justify-content-end">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-        <div class="form-group mt-5 start-0">
-            <a asp-action="AdminPage">< Admin Page</a>
         </div>
-    </main>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    <script src="~/ckeditor5/build/ckeditor.js"></script>
-
     <script>
-        ClassicEditor
-            .create(document.querySelector('.editor'), {
-                licenseKey: '',
-            })
-            .then(editor => {
-                window.editor = editor;
-            })
-            .catch(error => {
-                console.error('Oops, something went wrong!');
-                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                console.warn('Build id: xx09iayzufkn-lkt434h3lx2z');
-                console.error(error);
-            });
-    </script>
-
-
-    <script>
-        function addTag(el) {
-            let input = document.getElementById('tagInput');
-            let tagName = '';
-
-            //if (input.value != '') {
-            //    tagName = ',' + el.textContent;
-            //} else {
-            //    tagName = el.textContent;
-            //}
-            tagName = el.textContent + ',';
-
-            let currentTags = input.value.split(',');
-
-            currentTags.pop();
-            currentTags.push(tagName);
-
-            input.value = currentTags.reduce((inputString, currentString) => inputString + ',' + currentString.trim());
-
-            el.classList.add('disabledTag');
-            input.focus();
+        function addTag(element) {
+            const tagInput = document.getElementById('tagInput');
+            const currentTags = tagInput.value.split(',').map(tag => tag.trim());
+            const newTag = element.textContent.trim();
+            
+            if (!currentTags.includes(newTag)) {
+                currentTags.push(newTag);
+                tagInput.value = currentTags.join(', ');
+            }
         }
-
-        // override the jQuery ":contains" selector to make it case insensitive
-        jQuery.expr[':'].contains = function (a, i, m) {
-            return $(a).text().toUpperCase()
-                .indexOf(m[3].toUpperCase()) >= 0;
-        };
-
-        $(document).ready(function () {
-            $('#tagInput').focus(function () {
-                // show tag cloud when the input is focused
-                $('.tagcloud').show(300);
-            });
-
-            $('form *:not("#tagInput")').focus(function () {
-                if ($('.tagcloud').is(':visible')) {
-                    $('.tagcloud').hide(300);
-                }
-            });
-
-            $('#tagInput').keyup(function () {
-                $('.disabledTag').each(function () {
-                    $(this).removeClass('disabledTag');
-                });
-
-                let inputTags = $(this).val().split(',');
-
-                let searchString = inputTags.pop().trim();
-
-                $('.tagcloud > a:not( :contains(' + searchString + '))').hide();
-                $('.tagcloud > a:contains(' + searchString + '))').show();
-
-                inputTags.foreach(addTag => {
-                    if (tag.trim() == '') {
-                        return;
-                    }
-
-                    let containingTag = $('.tagcloud > a:contains(' + tag.trim() + ')');
-
-                    if (containingTag.text().trim().toLowerCase() == tag.trim().toLowerCase()) {
-                        containingTag.addClass('disabledTag');
-                    }
-                });
-
-            });
-        });
     </script>
 }
