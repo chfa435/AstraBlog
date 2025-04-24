@@ -110,7 +110,7 @@
                                          src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPostImage)" 
                                          id="blogImage">
                                 </div>
-                                <input asp-for="ImageFile" type="file" class="form-control mt-3" 
+                                <input asp-for="ImageFile" type="file" class="file-input mt-3" 
                                        accept=".png,.jpg,.jpeg,.gif"
                                        onchange="document.getElementById('blogImage').src = window.URL.createObjectURL(this.files[0])" />
                             </div>
