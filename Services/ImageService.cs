@@ -18,26 +18,30 @@ namespace AstraBlog.Services
                     case 1: return _defaultUserImage;
                     case 2: return _defaultBlogImage;
                     case 3: return _defaultCategoryImage;
+                    default: throw new ArgumentException("Invalid default image type", nameof(defaultImage));
                 }
             }
 
             try
             {
-                string imageBase64Data = Convert.ToBase64String(fileData!);
+                string imageBase64Data = Convert.ToBase64String(fileData);
                 imageBase64Data = string.Format($"data:{extension};base64,{imageBase64Data}");
 
                 return imageBase64Data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new Exception("Error converting byte array to file", ex);
             }
-
         }
 
         public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
         {
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is null or empty", nameof(file));
+            }
+
             try
             {
                 using MemoryStream memoryStream = new MemoryStream();
@@ -47,10 +51,9 @@ namespace AstraBlog.Services
 
                 return byteFile;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new Exception("Error converting file to byte array", ex);
             }
         }
     }

@@ -33,15 +33,19 @@ namespace AstraBlog.Services
 
         public async Task AddCategoryAsync(Category category)
         {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
             try
             {
                 await _context.AddAsync(category);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new Exception("Error adding category to database", ex);
             }
         }
 

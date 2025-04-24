@@ -71,7 +71,7 @@ namespace AstraBlog.Controllers
                 try
                 {
                     // Image Service
-                    if (category.ImageFile != null)
+                    if (category.ImageFile != null && category.ImageFile.Length > 0)
                     {
                         category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
                         category.ImageType = category.ImageFile.ContentType;
