@@ -106,7 +106,7 @@
                     <div class="form-group">
                         <label asp-for="ImageFile" class="form-label">Category Image</label>
                         <div class="image-preview">
-                            <img src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!, (int)DefaultImage.CategoryImage)" 
+                            <img src="@(Model.ImageData != null ? _ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType!, (int)DefaultImage.CategoryImage) : "/img/DefaultCategoryImage.png")" 
                                  id="categoryImage" alt="Category preview">
                         </div>
                         <input asp-for="ImageFile" type="file" class="form-control mt-3" 
