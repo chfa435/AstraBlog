@@ -23,7 +23,8 @@ button,
 }
 
 /* Custom file input styles */
-input[type="file"] {
+input[type="file"],
+.file-input {
     height: 50px;
     padding: 0.5rem 1rem;
     background: var(--color-lightest);
