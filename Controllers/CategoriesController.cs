@@ -68,16 +68,23 @@ namespace AstraBlog.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                // Image Service
-                if (category.ImageFile != null)
+                try
                 {
-                    category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
-                    category.ImageType = category.ImageFile.ContentType;
-                }
+                    // Image Service
+                    if (category.ImageFile != null)
+                    {
+                        category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
+                        category.ImageType = category.ImageFile.ContentType;
+                    }
 
-                await _blogPostService.AddCategoryAsync(category);   
-                return RedirectToAction(nameof(Index));
+                    await _blogPostService.AddCategoryAsync(category);   
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "An error occurred while creating the category. Please try again.");
+                    return View(category);
+                }
             }
             return View(category);
         }
