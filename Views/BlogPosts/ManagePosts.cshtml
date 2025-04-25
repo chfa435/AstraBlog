@@ -1,6 +1,7 @@
 @model IEnumerable<BlogPost>
 @using AstraBlog.Enums;
 @using AstraBlog.Services.Interfaces
+@using AstraBlog.Models.Enums
 
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogPostService
@@ -116,7 +117,7 @@
                                                 </span>
                                             </td>
                                             <td>@post.Created.ToString("MMM dd, yyyy")</td>
-                                            <td>@post.Updated.ToString("MMM dd, yyyy")</td>
+                                            <td>@post.Updated?.ToString("MMM dd, yyyy")</td>
                                             <td>@post.Comments.Count</td>
                                             <td>
                                                 <div class="btn-group">

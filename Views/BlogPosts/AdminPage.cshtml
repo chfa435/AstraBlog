@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<BlogPost>
 @using AstraBlog.Enums;
 @using AstraBlog.Services.Interfaces
+@using AstraBlog.Models.Enums
 
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogPostService
@@ -105,7 +106,7 @@
                                                     @post.Status
                                                 </span>
                                             </td>
-                                            <td>@post.Updated.ToString("MMM dd, yyyy")</td>
+                                            <td>@post.Updated?.ToString("MMM dd, yyyy")</td>
                                             <td>
                                                 <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i>
