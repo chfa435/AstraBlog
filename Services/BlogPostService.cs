@@ -357,6 +357,26 @@ namespace AstraBlog.Services
             }
         }
 
+        public async Task<IEnumerable<BlogPost>> GetAllPostsAsync()
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPosts = await _context.BlogPosts
+                                                                .Where(b => b.Status == PublishStatus.Published && b.IsDeleted == false)
+                                                                .Include(b => b.Category)
+                                                                .Include(b => b.Tags)
+                                                                .Include(b => b.Comments)
+                                                                    .ThenInclude(c => c.Author)
+                                                                .ToListAsync();
+
+                return blogPosts.OrderByDescending(b => b.Created);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<Tag> GetTagAsync(int tagId)
         {
             try

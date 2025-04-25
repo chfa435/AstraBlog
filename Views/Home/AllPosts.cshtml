@@ -1,4 +1,4 @@
-﻿@model IPagedList<AstraBlog.Models.BlogPost>
+@model IPagedList<AstraBlog.Models.BlogPost>
 
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
@@ -15,8 +15,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-title text-center">
-                    <h2 class="title mb--40">Popular Posts</h2>
-                    <p class="subtitle">Discover our most engaging and discussed content</p>
+                    <h2 class="title mb--40">All Posts</h2>
+                    <p class="subtitle">Browse through our complete collection of articles</p>
                 </div>
             </div>
             <div class="col-lg-12">
@@ -24,7 +24,7 @@
                     @foreach (var blogPost in Model)
                     {
                         <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                            <div class="content-block modern-post-style popular-post">
+                            <div class="content-block modern-post-style">
                                 <div class="post-thumbnail">
                                     <a asp-controller="BlogPosts" asp-action="Details" asp-route-slug="@blogPost.Slug">
                                         <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!, (int)DefaultImage.BlogPostImage)" alt="@blogPost.Title">
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="pagination text-center mt--40">
-                    @Html.PagedListPager(Model, pageNum => Url.Action("Popular", new { pageNum }),
+                    @Html.PagedListPager(Model, pageNum => Url.Action("AllPosts", new { pageNum }),
                     new PagedListRenderOptions
                     {
                         LiElementClasses = new string[] {"page-item"},
@@ -68,4 +68,4 @@
         </div>
     </div>
 </div>
-<!-- End Post List Wrapper  -->
+<!-- End Post List Wrapper  --> 

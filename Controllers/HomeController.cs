@@ -58,7 +58,7 @@ namespace AstraBlog.Controllers
             int pageSize = 4;
             int page = pageNum ?? 1;
 
-            IPagedList<BlogPost> model = (await _blogPostService.GetRecentPostsAsync()).ToPagedList(page, pageSize);
+            IPagedList<BlogPost> model = (await _blogPostService.GetPopularPostsAsync()).ToPagedList(page, pageSize);
 
             return View(model);
         }
@@ -73,7 +73,15 @@ namespace AstraBlog.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> AllPosts(int? pageNum)
+        {
+            int pageSize = 6;
+            int page = pageNum ?? 1;
 
+            IPagedList<BlogPost> model = (await _blogPostService.GetAllPostsAsync()).ToPagedList(page, pageSize);
+
+            return View(model);
+        }
 
         public async Task<IActionResult> ContactMe()
         {

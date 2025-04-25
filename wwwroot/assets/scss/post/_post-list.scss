@@ -194,58 +194,92 @@ Post List Style
     
     // Tab Post Style 
     &.modern-post-style {
+        background: var(--color-white);
         border-radius: var(--radius);
-        background: var(--color-lightest);
-        padding: 50px 35px 0;
         overflow: hidden;
-        @media #{$md-layout} {
-            padding: 40px 20px 0;
-        }
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
-        &.text-center {
-            .post-cat-list {
-                justify-content: center;
-            }
-        }
-
-        &.text-end {
-            .post-cat-list {
-                justify-content: flex-end;
+        .post-thumbnail {
+            position: relative;
+            overflow: hidden;
+            padding-top: 60%;
+            
+            a {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.5s ease;
+                }
             }
         }
 
         .post-content {
-            padding-bottom: 50px;
-            .title {
-                margin-bottom: 0;
+            padding: 25px;
+            
+            .post-cat {
+                margin-bottom: 10px;
+                
+                .post-cat-list {
+                    a {
+                        color: var(--color-primary);
+                        font-size: 14px;
+                        font-weight: 500;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                    }
+                }
             }
-        }
 
-        .post-thumbnail {
-            margin: 0 -35px;
-            position: relative;
-            @media #{$md-layout} {
-                margin: 0 -20px;
+            .title {
+                margin-bottom: 15px;
+                line-height: 1.4;
+                
+                a {
+                    color: var(--color-heading);
+                    font-size: 20px;
+                    font-weight: 600;
+                    transition: color 0.3s ease;
+                    
+                    &:hover {
+                        color: var(--color-primary);
+                    }
+                }
             }
-            &::before {
-                content:'';
-                background: url('../images/icons/shape-01.png');
-                height: 77px;
-                width: 100%;
-                position: absolute;
-                left: 0;
-                top: -3px;
-                z-index: 5;
-                background-position: center center;
-                background-size: cover;
-            }
-            a {
-                img {
-                    transition: 0.5s;
+
+            .post-meta {
+                .post-meta-list {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    
+                    li {
+                        color: var(--color-body);
+                        font-size: 14px;
+                        display: flex;
+                        align-items: center;
+                        
+                        &::before {
+                            content: "•";
+                            margin-right: 5px;
+                        }
+                    }
                 }
             }
         }
+
         &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            
             .post-thumbnail {
                 a {
                     img {
@@ -1176,6 +1210,52 @@ ul {
         -ms-transform: none;
         -o-transform: none;
         transform: none;
+    }
+}
+
+// Popular Posts Styling
+.popular-post {
+    border-top: 3px solid var(--color-primary);
+    
+    .post-thumbnail {
+        &::after {
+            content: "🔥";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+// Recent Posts Styling
+.recent-post {
+    border-top: 3px solid var(--color-secondary);
+    
+    .post-thumbnail {
+        &::after {
+            content: "🆕";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
     }
 }
 

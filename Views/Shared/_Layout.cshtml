@@ -36,14 +36,17 @@
     <link rel="stylesheet" href="~/css/site.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        .metabar-block .nav-link span:not(.user-img) {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+    </style>
 </head>
 
 <body>
     <partial name="_LogoutPartial" />
     <div class="main-wrapper">
-        <div class="mouse-cursor cursor-outer"></div>
-        <div class="mouse-cursor cursor-inner"></div>
-
         <!-- Start Header -->
         <header class="header axil-header  header-light header-sticky header-with-shadow">
             <div class="header-wrap">
@@ -67,7 +70,7 @@
                                         <a asp-controller="Home" asp-action="Index">Home</a>
                                     </li>
                                     <li class="menu-item-has-children">
-                                        <a href="#">Posts</a>
+                                        <a asp-action="AllPosts" asp-controller="Home">Posts</a>
                                         <ul class="axil-submenu">
                                             @*<li>
                                                 <a class="hover-flip-item-wrapper" asp-action="Index" asp-controller="Home">

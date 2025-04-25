@@ -9,45 +9,62 @@
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogService
 
-
-<partial name="_AuthorArea" />
-
 <!-- Start Post List Wrapper  -->
 <div class="axil-post-list-area axil-section-gap bg-color-white">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="page-title">
-                    <h2 class="title mb--40">Articles By This Author</h2>
+                <div class="page-title text-center">
+                    <h2 class="title mb--40">Recent Posts</h2>
+                    <p class="subtitle">Stay up to date with our latest content</p>
                 </div>
             </div>
-            <div class="offset-md-2 col-md-8 col-lg-8">
+            <div class="col-lg-12">
+                <div class="row">
+                    @foreach (var blogPost in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="content-block modern-post-style recent-post">
+                                <div class="post-thumbnail">
+                                    <a asp-controller="BlogPosts" asp-action="Details" asp-route-slug="@blogPost.Slug">
+                                        <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!, (int)DefaultImage.BlogPostImage)" alt="@blogPost.Title">
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    <div class="post-cat">
+                                        <div class="post-cat-list">
+                                            <a href="#">@blogPost.Category?.Name</a>
+                                        </div>
+                                    </div>
+                                    <h5 class="title">
+                                        <a asp-controller="BlogPosts" asp-action="Details" asp-route-slug="@blogPost.Slug">@blogPost.Title</a>
+                                    </h5>
+                                    <div class="post-meta">
+                                        <ul class="post-meta-list">
+                                            <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
+                                            <li>@blogPost.Comments.Count comments</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
 
-                @foreach (var blogPost in Model)
-                {
-                    <partial name="_BlogCard" model="@blogPost" />
-                }
-
-                <div>
-                    <div>
-                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                    </div>
-
-                    @Html.PagedListPager(Model, pageNum => Url.Action("Index", new { pageNum }),
+                <div class="pagination text-center mt--40">
+                    @Html.PagedListPager(Model, pageNum => Url.Action("Recent", new { pageNum }),
                     new PagedListRenderOptions
                     {
-                        LiElementClasses = new string[] {"my-page-item"},
-                        PageClasses = new string[] {"my-page-link"}
+                        LiElementClasses = new string[] {"page-item"},
+                        PageClasses = new string[] {"page-link"},
+                        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                        MaximumPageNumbersToDisplay = 5
                     })
-
                 </div>
-
             </div>
-@*            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
-
-                <partial name="_Sidebar" />
-
-            </div>*@
         </div>
     </div>
 </div>

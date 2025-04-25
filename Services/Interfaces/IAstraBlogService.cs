@@ -21,7 +21,7 @@ namespace AstraBlog.Services.Interfaces
         public Task<IEnumerable<BlogPost>> GetRecentPostsAsync();
         public Task<IEnumerable<BlogPost>> GetRecentPostsAsync(int count);
         public Task<IEnumerable<BlogPost>> GetRecentPostsExceptOneAsync(int blogPostId, int count);
-
+        public Task<IEnumerable<BlogPost>> GetAllPostsAsync();
         #endregion
 
 
