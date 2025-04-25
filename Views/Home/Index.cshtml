@@ -9,47 +9,266 @@
 @inject IImageService _ImageService
 @inject IAstraBlogService _BlogService
 
+<style>
+    /* Base styles */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #2c3e50;
+        background-color: #f8f9fa;
+    }
 
-<partial name="_AuthorArea" />
+    .hero-section {
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+    }
 
-<!-- Start Post List Wrapper  -->
-<div class="axil-post-list-area axil-section-gap bg-color-white">
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-input:focus {
+        outline: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Categories Section */
+    .categories-section {
+        background: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .category-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .category-tab {
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        background: #f8f9fa;
+        color: #2c3e50;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .category-tab:hover, .category-tab.active {
+        background: #3498db;
+        color: white;
+    }
+
+    /* Blog Grid */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #3498db;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+
+    .blog-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .blog-content {
+        padding: 1.5rem;
+    }
+
+    .blog-category {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #f1f1f1;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        color: #3498db;
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+    }
+
+    .blog-excerpt {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .blog-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .pagination .page-link {
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        border-radius: 4px;
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    .pagination .active .page-link {
+        background-color: #3498db;
+        color: white;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="page-title">
-                    <h2 class="title mb--40">Articles By This Author</h2>
-                </div>
-            </div>
-            <div class="col-lg-8 col-xl-8">
-
-                @foreach (var blogPost in Model)
-                {
-                    <partial name="_BlogCard" model="@blogPost" />
-                }
-
-                <div>
-                    <div>
-                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                    </div>
-
-                    @Html.PagedListPager(Model, pageNum => Url.Action("Index", new { pageNum }),
-                    new PagedListRenderOptions
-                    {
-                        LiElementClasses = new string[] {"my-page-item"},
-                        PageClasses = new string[] {"my-page-link"}
-                    })
-
-                </div>
-
-            </div>
-            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
-
-                <partial name="_Sidebar" />
-
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to AstraBlog</h1>
+            <p class="hero-subtitle">Discover insightful articles, tutorials, and stories from our community</p>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search articles...">
             </div>
         </div>
     </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="category-tabs">
+            <a href="#" class="category-tab active">All Posts</a>
+            <a href="#" class="category-tab">Technology</a>
+            <a href="#" class="category-tab">Programming</a>
+            <a href="#" class="category-tab">Design</a>
+            <a href="#" class="category-tab">Business</a>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Latest Posts -->
+            <h3 class="section-title">Latest Posts</h3>
+            <div class="blog-grid">
+                @foreach (var blogPost in Model)
+                {
+                    <div class="blog-card">
+                        <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType, (int)DefaultImage.BlogPostImage)" 
+                             class="blog-image" alt="@blogPost.Title">
+                        <div class="blog-content">
+                            <span class="blog-category">@blogPost.Category?.Name</span>
+                            <h3 class="blog-title">@blogPost.Title</h3>
+                            <p class="blog-excerpt">@blogPost.Abstract</p>
+                            <div class="blog-meta">
+                                <span>@blogPost.Created.ToString("MMM dd, yyyy")</span>
+                                <span>@blogPost.Comments.Count comments</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                @Html.PagedListPager(Model, pageNum => Url.Action("Index", new { pageNum }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <partial name="_Sidebar" />
+        </div>
+    </div>
 </div>
-<!-- End Post List Wrapper  -->
-<!-- Start Instagram Area  -->
+
+@section Scripts {
+    <script>
+        // Add smooth scrolling for pagination
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector('.blog-grid');
+                target.scrollIntoView({ behavior: 'smooth' });
+                window.location.href = link.href;
+            });
+        });
+
+        // Category tab switching
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // Add category filtering logic here
+            });
+        });
+    </script>
+}

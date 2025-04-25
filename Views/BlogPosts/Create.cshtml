@@ -159,7 +159,9 @@
                                 <label asp-for="ImageFile" class="form-label">Featured Image</label>
                                 <div class="image-preview">
                                     <img class="img-fluid" style="max-height: 250px;" 
-                                         src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPostImage)" 
+                                         src="@(Model.ImageData != null && Model.ImageType != null 
+                                             ? _ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType, (int)DefaultImage.BlogPostImage)
+                                             : _ImageService.ConvertByteArrayToFile(null, null, (int)DefaultImage.BlogPostImage))" 
                                          id="blogImage">
                                 </div>
                                 <label for="ImageFile" class="file-label w-100 text-center">
