@@ -31,6 +31,12 @@ namespace AstraBlog.Controllers
             return View(blogPosts);
         }
 
+        public async Task<IActionResult> ManagePosts()
+        {
+            var blogPosts = await _blogPostService.GetBlogPostsAsync();
+            return View(blogPosts);
+        }
+
         // GET: BlogPosts/Details/5
         [AllowAnonymous]
         public async Task<IActionResult> Details(string? slug)
